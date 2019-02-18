@@ -71,7 +71,7 @@ BEGIN
         NAME "Static Text111"
     END
 
-    INPUTE 112, "NotificationManager/Demo/test.png", 160, 224, 250, 25
+    INPUTE 112, "BBjNotificationManager/Demo/test.png", 160, 224, 250, 25
     BEGIN
         NAME "InputE112"
         PADCHARACTER 32

@@ -38,9 +38,9 @@ To create an object call the constructor with new NotificationButton(String text
 
 If a link is passed the Notification will get a little button which will redirect the user to given links<br/>
 ### CAUTION: <br/>
-Only Internet links are usable (no paths to drive etc.) and only links with scheme "http(s)://www.mysite.com" will work, if the link is not a valid internet address it will not display a redirection button!!! <br/>
+only Internet links are usable (no paths to drive etc.) and only links with scheme "http(s)://www.mysite.com" will work, if the link is not a valid internet address it will not display a redirection button!!! <br/>
 
 
 
-![alt text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
+![alt text][https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png]
 

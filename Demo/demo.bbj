@@ -18,7 +18,7 @@ else
 endif
 
 Rem getting all controlls
-handle = SysGui!.resOpen("NotificationManager/Demo/demo.arc")
+handle = SysGui!.resOpen("BBjNotificationManager/Demo/demo.arc")
 
 declare auto BBjTopLevelWindow wnd!
 wnd! = SysGui!.createTopLevelWindow(handle,999)
