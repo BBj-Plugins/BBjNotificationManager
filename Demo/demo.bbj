@@ -1,6 +1,6 @@
-use ::NotificationManager/NotificationManager.bbj::NotificationManager
+use ::BBjNotificationManager/NotificationManager.bbj::NotificationManager
 use java.util.ArrayList 
-use ::NotificationManager/src/NotificationButton.bbj::NotificationButton
+use ::BBjNotificationManager/src/NotificationButton.bbj::NotificationButton
 
 
 declare NotificationManager mng!

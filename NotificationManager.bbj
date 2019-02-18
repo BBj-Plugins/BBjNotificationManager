@@ -1,7 +1,7 @@
-use ::NotificationManager/src/Notification.bbj::Notification
+use ::BBjNotificationManager/src/Notification.bbj::Notification
 use java.util.ArrayList
 use ::BBjWidget/BBjWidget.bbj::BBjWidget
-use ::NotificationManager/src/NotificationButton.bbj::NotificationButton
+use ::BBjNotificationManager/src/NotificationButton.bbj::NotificationButton
 
 
 rem /**
