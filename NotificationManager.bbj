@@ -1,0 +1,303 @@
+use ::NotificationManager/src/Notification.bbj::Notification
+use java.util.ArrayList
+use ::BBjWidget/BBjWidget.bbj::BBjWidget
+use ::NotificationManager/src/NotificationButton.bbj::NotificationButton
+
+
+rem /**
+rem  * --------------------------
+rem  * Manual
+rem  * --------------------------
+rem  * The plugin will use the BBjAPI-IDs as follows for each respective Notification (only mind if you´re working on the NotificationControlls themselves)
+rem  * IDS WILL NOT BE BLOCKED OUTSIDE OF A NOTIFICATIONS CONTEXT!!!
+rem  * 1100+ = IDs for the notificationwindows itself and its respective titles
+rem  * 11100+ = IDs for the notifications respective dismissbutton
+rem  * 51100+ = IDs for the notifications respective textfields
+rem  * 101100+ = IDs for the notifications respective timer (only if a timer was given)
+rem  * 175000+ = IDs for custom Buttons on the Notification
+rem  * 1000000 = ID for the Icon on the Notification
+rem  * ----------------------------------------------------------------------------
+rem  * simple usage guide:
+rem  * initialize an instance of the NotificationManager i.e. mng! = new NotificationManager(1)
+rem  * create a Notification with the addNotification method i.e. mng!.addNotification(text,timeout,title,eventhandle,color,image,List<Buttons>,link)
+rem  * change the animationmode with setAnimate(true/false)  , it is false by default
+rem  * ----------------------------------------------------------------------------
+rem  * optional values are : text, dismiss, title, handle, color, image, buttons, link 
+rem  * these can be passed null() if not required and will be left out
+rem  * 
+rem  * if an eventhandle was given to the Notification it will push the event 17 which can be caught by processing event onclick:
+rem  * (A Notification has to be cleared manually if it was clicked, which can be performed using the eventhandle delivered by the event and the deletehandle(String handle) method
+rem  * 
+rem  * if a timeout was given the Notification will be dismissed on the timeout count (in seconds)
+rem  * 
+rem  * if a color (BBjColor) is given it will change the BackgroundColor of the Notification
+rem  * 
+rem  * if an image (only BBj-conform formats can be used) is passed it will appear on the left hand side of the Notification as an Icon
+rem  * 
+rem  * if Buttons are passed every Item in the List will be added as a Button in the Notification.
+rem  * to pass buttons simply create a java.util.ArrayList and fill it with NotificationButton Objects, provided in the Plugin
+rem  * to create an object call the constructor with new NotificationButton(String text, String eventhandle,int width) and put it in to the List 
+rem  * 
+rem  * if a link is passed, the Notification will get a little button which will redirect the user to given links
+rem  * ----------------------------------------------------------------------------
+rem  */
+
+
+class public NotificationManager extends BBjWidget
+
+    field private BBjSysGui SysGui!
+    field private ArrayList notifications!
+    field private ArrayList buffer!
+    rem settings
+    rem maximal number of notifications displayed
+    field private int displayMax!
+    rem buffer to the bottom of the screen
+    field private int bottombuffer!
+    rem buffer to the right of the screen
+    field private int xbuffer!
+    rem animation mode
+    field private Boolean animate!
+
+    rem /**
+    rem  * Constructor for the Manager
+    rem */
+    method public NotificationManager()
+        rem Getting Sysgui
+        #SysGui! = BBjAPI().openSysGui("X0")
+        
+        rem initializing required fields
+        #notifications! = new ArrayList()
+        #buffer! = new ArrayList()
+        
+        rem init settings
+        #displayMax! = 5
+        #bottombuffer! = 50
+        #xbuffer! = 30
+        #animate! = false
+    methodend
+
+    
+    rem /**
+    rem  * reposition the entirety of displayed notifications
+    rem  */
+    method public void reposition ()
+       declare auto Notification not!
+       if #notifications!.size() > 0 then
+       rem cycling through the notifications object to reposition all notifications to their respective new position
+        for i=0 to #notifications!.size()-1
+             not! = #notifications!.get(i)
+             not!.setPosition(not!.getx(),#getNextYPOS(i-1,not!.getheight()),#animate!)
+         next i
+       fi
+    methodend
+    
+    rem /**
+    rem  * change the animate property which controlls if the animationfeature is used or not
+    rem  * 
+    rem  * @param animate! Variable to toggle animated mode
+    rem  */ 
+    method public void setAnimate(Boolean animate!)
+        #animate! = animate!
+        declare auto Notification not!
+        rem cycling through displayed notifications
+        if #notifications!.size() > 0 then 
+          for i = 0 to #notifications!.size()-1
+              not! = #notifications!.get(i)
+              not!.setanimate(#animate!)
+          next i
+        fi
+        rem cycling through buffered notifications
+        if #buffer!.size() > 0 then
+          for i = 0 to #buffer!.size()-1
+            not! = #buffer!.get(i)
+            not!.setanimate(#animate!)
+          next i
+        fi
+    methodend
+    
+    
+    rem /** 
+    rem  * delete the ID of an active notification
+    rem  * 
+    rem  * @param ID! ID of the Notification to be deleted
+    rem  */ 
+    method public void deleteID(int ID!)
+        declare auto Notification not!
+        if #notifications!.size() > 0 then
+        rem cycling the active notifications
+          for i=0 to #notifications!.size()-1
+              not! = #notifications!.get(i)
+              rem if the id was found it will be deleted with an optional animation
+              if not!.getID() = ID! then
+                   not!.dismiss(#animate!)
+                   #notifications!.remove(i)
+                   break
+              fi
+          next i
+        fi
+    methodend
+ 
+    rem /**gets called when the notifications change, it will fire a new notification from the buffer 
+    rem  * to the displayed notifications if it reaches an amount of less than 5 
+    rem  * 
+    rem  */
+    method public void fireNextFromBuffer()
+        if #notifications!.size() < #displayMax! AND #buffer!.size()>0 then
+            declare auto Notification not!
+            not! = #buffer!.get(0)
+            #notifications!.add(not!)
+            not!.display(#animate!)
+            #buffer!.remove(0)
+        fi
+    methodend
+ 
+    
+    rem /**add a new notification to the system with given properties
+    rem  * 
+    rem  * @param text! Text to be displayed in the body of the Notification
+    rem  * @param dismiss! Time in seconds until the Notification will be dismissed automatically
+    rem  * @param title! Title to be displayed on the upper section of the Notification
+    rem  * @param EventHandle! Handle to be thrown out when a Notification itself is clicked
+    rem  * @param color! Backgroundcolor of the Notification
+    rem  * @param image! Icon to be displayed on the left hand side of the Notification
+    rem  * @param buttons! List of ButtonsMetadata to be displayed on the Bottom of the Notification 
+    rem  * @param redirect! Link to be linked with the redirect button on the upper right corner (only valid links in Format https://www.examplesite.com)
+    rem  */ 
+    method public void addNotification(String text!,int dismiss!,String title!, String EventHandle!,BBjColor color!,BBjImage image!,ArrayList buttons!,String redirect!)
+        declare int height!
+        declare int width!
+        
+        ID! = #getFreeID()
+        screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        rem height of the notifications is correspodning to 10% of the screen size
+        height! = int(screenBounds!.height*0.1)
+        
+        rem width of the notification is corresponding to 20% of the screen size
+        width! = int(screenBounds!.width*0.2)
+        rem giving the notification a little buffer to the right side of the screen
+        rem to change the buffersize , change the content of the variable xbuffer! to any value you´d like 
+        x! = screenBounds!.width - (width!+#xbuffer!)
+     
+        declare Notification not!
+        
+        not! = new Notification(ID!,height!,width!,text!,dismiss!,x!,0,"Notification",#this!,title!,#animate!,EventHandle!,color!,image!,buttons!,redirect!)
+        rem only displaying the given amount of notifications, if the notification would exceed the given amount
+        rem it will be put into a buffer and displayed if enough slots are open
+
+        if #notifications!.size() < #displayMax! then
+          #notifications!.add(not!)
+          not!.sety(0)
+          not!.display(#animate!)
+        else
+          #buffer!.add(not!)
+        endif
+    methodend
+    
+    
+    rem /**
+    rem  * find the next avaiable ypos open on the screen to display a notification at
+    rem  * 
+    rem  * @param run! Position of the Notification wihtin the Array
+    rem  * @param ownheight! height of the Notification
+    rem  */ 
+    method private int getNextYPOS(int run!,int ownheight!)
+        declare int ypos!
+        declare int height!
+        declare auto Notification not!
+         screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        height! = ownheight!+20
+        rem cycling through the notifications and adding all the heights including a bottombuffer together to find a ypos thats open at the top 
+        
+        if run! < #notifications!.size() AND run! >= 0 then
+          if #notifications!.size() > 0 then
+             print "run"
+             for i = 0 to run!
+                not! = #notifications!.get(i)
+                height! = height! + not!.getheight()+10
+             next i
+          fi
+
+          
+        endif
+        
+        
+        ypos! = screenBounds!.height - (height!+#bottombuffer!)
+        methodret ypos!
+    methodend
+    
+    
+    rem /**
+    rem  * find a unused display-id within the range of all active and inactive notifications that are in the notifications list and the buffer
+    rem  * 
+    rem  */ 
+    method private int getFreeID()
+        declare int ID!
+        declare Boolean contained!
+        ID!=1100
+        contained! = 1
+        rem cycling through the buffer and the notifications to find an open id via brute force
+        if #notifications!.size() > 0 then
+            while contained!
+                contained! = 0
+                declare auto Notification not!
+                for i= 0 to #notifications!.size()-1
+                    not! = #notifications!.get(i)
+                    if not!.getID() = ID! then
+                        contained! = 1
+                    fi 
+                next i
+                if #buffer!.size() > 0 then
+                  for i = 0 to #buffer!.size()-1
+                      not! = #buffer!.get(i)
+                      if not!.getID() = ID! then
+                          contained! = 1
+                      fi 
+                  next i
+                fi
+                if contained! then 
+                    ID! = ID! + 1
+                fi
+            wend
+        fi
+        methodret ID!
+    methodend
+
+
+    rem /**delete a specific notification by its eventhandle which has to be given to it when creating it
+    rem  * only safe method to delete a notification from outside!
+    rem  * 
+    rem  * @param eventhandle! Handle of the Notification to be deleted
+    rem  */ 
+    method public void deleteNotification(String eventhandle!)
+        declare auto Notification not!
+        if #notifications!.size() > 0 then
+            for i = 0 to #notifications!.size()-1
+                not! = #notifications!.get(i)
+                if not!.getEventHandle() = eventhandle! then
+                    #deleteID(not!.getID(),#animate!)
+                    break
+                fi
+            next i
+        fi     
+        if #buffer!.size() > 0 then
+            for i = 0 to #buffer!.size()-1
+                not! = #notifications!.get(i)
+                if not!.getEventHandle() = eventhandle! then
+                    #deleteID(not!.getID(),#animate!)
+                    break
+                fi
+            next i
+        fi
+        #reposition()
+    methodend
+    
+    rem /** 
+    rem  * fireevent when a notification is clicked
+    rem  * 
+    rem  * @param id! String to be thrown as an Event
+    rem  */ 
+    method public void firePush(String id!)
+        #super!.fireEvent(17,id!)
+    methodend
+    
+classend

@@ -1,0 +1,104 @@
+use ::NotificationManager/NotificationManager.bbj::NotificationManager
+use java.util.ArrayList 
+use ::NotificationManager/src/NotificationButton.bbj::NotificationButton
+
+
+declare NotificationManager mng!
+mng! = new NotificationManager() 
+mng!.setCallback(17,"onclick")
+declare BBjSysGui SysGui!
+
+if info(3,6) = "5" then
+  SysGui! = BBjAPI().openSysGui("X0")
+  declare auto BBjMDI MDI!
+  MDI! = BBjAPI().getMDI()
+  MDI!.createMDIWindow(0,0,800,600,"Demo Notifications",$000010008$)
+else
+  SysGui! = BBjAPI().openSysGui("X0")
+endif
+
+Rem getting all controlls
+handle = SysGui!.resOpen("NotificationManager/Demo/demo.arc")
+
+declare auto BBjTopLevelWindow wnd!
+wnd! = SysGui!.createTopLevelWindow(handle,999)
+
+declare auto BBjButton btn!
+btn! = wnd!.getControl(1100)
+
+declare auto BBjCEdit text!
+text! = wnd!.getControl(102)
+
+declare auto BBjInputN time!
+time! = wnd!.getControl(103)
+
+declare auto BBjInputE title!
+title! = wnd!.getControl(104)
+
+declare auto BBjCheckBox animate!
+animate! = wnd!.getControl(101)
+
+declare auto BBjInputE eventhandle!
+eventhandle! = wnd!.getControl(109)
+
+declare auto BBjStaticText eventmessage!
+eventmessage! = wnd!.getControl(110)
+
+declare auto BBjInputE path!
+path! = wnd!.getControl(112)
+
+declare auto BBjInputE color!
+color! = wnd!.getControl(114) 
+
+declare auto BBjInputE link!
+link! = wnd!.getControl(116) 
+
+declare Boolean anim!
+anim! = 0
+btn!.setCallback(BBjAPI.ON_BUTTON_PUSH,"btnPush")
+animate!.setCallback(BBjAPI.ON_CHECK_ON,"animate")
+animate!.setCallback(BBjAPI.ON_CHECK_OFF,"animateoff")
+wnd!.setCallback(BBjAPI.ON_CLOSE,"byebye")
+
+declare ArrayList buttons!
+buttons! = new ArrayList()
+button! = new NotificationButton("accept","accept")
+buttons!.add(button!)
+button! = new NotificationButton("decline","decline")
+buttons!.add(button!)
+button! = new NotificationButton("ignore","ignore")
+buttons!.add(button!)
+
+
+
+process_events
+
+btnPush:
+rem adding a notification
+rem parameters are : text,timeout,title ,eventhandle,color ,image ,buttons,link
+mng!.addNotification(text!.getText(),num(time!.getText()),title!.getText(),eventhandle!.getText(),SysGui!.makeColor(color!.getText().toUpperCase()),bbjapi().getSysGui().getImageManager().loadImageFromFile(path!.getText()),buttons!,link!.getText()) 
+return
+
+animate: 
+rem changing animation settings
+mng!.setAnimate(1)
+anim! = 1
+return
+
+animateoff:
+mng!.setAnimate(0)
+anim! = 0
+return
+
+
+
+byebye:
+bye
+
+
+onclick:
+rem using the event pushed by the Notification class when clicked
+ev!= BBjAPI().getLastEvent()
+ob! = ev!.getObject()
+eventmessage!.setText("Button "+str(ob!)+" clicked!")
+return

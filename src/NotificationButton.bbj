@@ -1,0 +1,16 @@
+class public NotificationButton
+    field public String text!
+    field public String handle!
+    field public int width!
+    field public int row!
+    field public int ID!
+    
+    method public NotificationButton(String text!,String handle!)
+        #text! = text!
+        #handle! = handle!
+        #width! = 80
+        #row! = 0 
+        #ID! = 0 
+    methodend
+    
+classend

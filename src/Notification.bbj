@@ -1,0 +1,407 @@
+use ::NotificationManager/NotificationManager.bbj::NotificationManager
+use java.util.ArrayList
+use ::NotificationManager/src/NotificationButton.bbj::NotificationButton
+use java.net.InetAddress
+use java.net.URL
+use java.net.HttpURLConnection
+
+class public Notification 
+    field private NotificationManager superclass!
+    field private int key!
+    field public int ID!
+    field public int x!
+    field public int y! 
+    rem dismiss = variable to save dismiss time
+    field public int dismiss!
+    field public String title!
+    field public int height!
+    field public int width!
+    field public String text!
+    field public String textTitle!
+    field public String EventHandle!
+    field public BBjImage image!
+    field public int imagewidth!
+    field public BBjColor background!
+    field private ArrayList buttons!
+    field private int rows!
+    field private String link!
+    
+    rem animate = animation mode
+    field public Boolean animate!
+    rem waittime = variable to save animation speed
+    field public static double waittime! = 0.002
+
+    field protected BBjSysGui SysGui!
+    field public BBjTopLevelWindow wnd!
+
+
+    REM /**
+    REM  * Initializing a Notification
+    REM  * 
+    REM  * @param ID! ID of the Notification within the context
+    REM  * @param height! height of the Notification
+    REM  * @param width! width of the Notification
+    REM  * @param text! text displayed on the Notification body
+    REM  * @param dismiss! time in seconds until Notification will be dismissed
+    REM  * @param x! x Position of the Notification
+    REM  * @param y! y Position of the Notification
+    REM  * @param title! title of the window  the Notification is displayed in
+    REM  * @param super! reference to superclass (aka the Manager Managing the Notifications)
+    REM  * @param textTitle! title displayed on the Notification body
+    REM  * @param animate! animation Mode toggle
+    REM  * @param EventHandle! handle to be thrown when the window itself was clicked
+    REM  * @param background! BackgroundColor of the Window
+    REM  * @param image! Icon to be displayed on the left hand side of the Notification
+    REM  * @param buttons! Metadata of the buttons that will be put on the Notification
+    REM  * @param link! link that the redirectbutton will redirect you to
+    REM  */ 
+    method public Notification(int ID!,int height!,int width!,String text!,int dismiss!,int x!,int y!,String title!,NotificationManager super!,String textTitle!,Boolean animate!, String EventHandle!,BBjColor background!,BBjImage image!,ArrayList buttons!,String link!)
+        #link!= link!
+        #SysGui! = BBjAPI().openSysGui("X0")
+        #animate! = animate!
+        #superclass! = super!
+        #ID! = ID!
+        #height! = height! 
+        #rows! = 0
+        #y!= y!
+        #dismiss! = dismiss!
+        #buttons! = buttons!
+       
+        if text! <> null() then
+            #text! = text!
+        else
+            #text!= ""
+        endif
+        if textTitle! <> null() then
+            #textTitle! = textTitle!
+        else
+            #textTitle!= ""
+        endif
+             
+        if background! <> null() then
+            #background! = background!
+        else
+            #background! = #SysGui!.makeColor(#SysGui!.WHITE)
+        endif
+        
+        if image! <> null() then
+            #image!= image!
+            #imagewidth! = image!.getWidth()
+            #width! = width! + #imagewidth!
+            #x! = x! - #imagewidth!+3
+        else
+            #image! = null()
+            #imagewidth! = 0
+            #width! = width! 
+            #x! = x!
+        endif
+        
+                if title! <> null() then
+            #title! = title!
+        else 
+            #title! = ""
+        endif
+            
+        endif
+        #EventHandle! = EventHandle!         
+
+    methodend
+    
+    
+    REM /**
+    REM  * build and display a notification
+    REM  * 
+    REM  * @param animate! should the display be animated or not?
+    REM  */
+    method public void display(Boolean animate!)
+        screenbounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        declare BBjTopLevelWindow wnd!
+        wnd! = #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01000010$)
+        
+        if #buttons! <> null() then
+          if #buttons!.size() <> 0 then
+              declare int i!
+              i! = 0
+              rowlength! = #width! - #imagewidth!
+              while i! < #buttons!.size()
+                declare auto NotificationButton button!
+                button! = #buttons!.get(i!)
+                buttonsize!  = #SysGui!.getMeasure(button!.gettext())+35
+               if (buttonsize! < #width!*0.2)
+                    button!.setwidth(int(#width!*0.2))
+               else
+                    button!.setwidth(buttonsize!)
+               endif
+                   
+                if rowlength! - button!.getwidth() > 0 then
+                    rowlength! = rowlength! - button!.getwidth() 
+                    button!.setrow(#rows!)
+                    button!.setID(175000+i!)
+                else
+                    #rows! = #rows!+1
+                    rowlength! = #width! - #imagewidth!
+                    rowlength! = rowlength! - button!.getwidth()
+                    button!.setrow(#rows!)
+                    button!.setID(175000+i!)
+                endif                                     
+                i! = i! +1
+              wend
+             #rows!= #rows!+1
+             #height! = #height! + (#rows! * 26)
+          fi
+        fi
+        wnd!.destroy()
+        
+        rem creating a window and animating it if wished
+        if animate! then
+          #wnd!= #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01000010$)
+          #wnd!.setBackColor(#background!)
+        else
+          #wnd! = #SysGui!.addWindow(#ID!,#x!,#y!,#width!,#height!,#title!,$01000010$)
+          #wnd!.setBackColor(#background!)
+        endif
+        
+
+        rem adding an event when clicked if an eventhandle is given
+        if (#EventHandle!>"") then
+            #wnd!.setCallback(BBjAPI.ON_MOUSE_DOWN,#this!,"onWindowPush")
+        fi
+        
+        rem adding the Title Text and dismissbutton to the window
+        declare BBjStaticText title!
+        titleHeight! = 45
+        title! = #wnd!.addStaticText(#ID!,#imagewidth!+5,5,#width!-52,int(titleHeight!),#textTitle!)
+        title!.setFont(#SysGui!.makeFont("arial",14,1))
+        title!.setBackColor(#background!)
+        title!.setForeColor(#SysGui!.makeColor(41,41,97))
+        
+        
+        declare BBjStaticText textField!
+        textHeight! = #height!-(#rows!*20) * 0.5
+        textField! = #wnd!.addStaticText(#ID!+50000,#imagewidth!+5,titleHeight!-7,#width!-10-#imagewidth!,textHeight!+3,#text!)
+        textField!.setFont(#SysGui!.makeFont("arial",9,0))
+        textField!.setBackColor(#background!)
+        
+        declare BBjButton btn!
+        btn! = #wnd!.addButton(#ID!+10000,#width!-47,0,50,30,"x")
+        btn!.setOpaque(0)
+        btn!.setNoEdge(1)
+        btn!.setForeColor(#SysGui!.makeColor(#SysGui!.RED))
+        btn!.setCallback(BBjAPI.ON_BUTTON_PUSH,#this!,"onClosePush")
+        btn!.setBackColor(#background!)
+        btn!.setFont(#SysGui!.makeFont("Roboto",12,1))
+        
+
+        if #link!<> null() then
+            if #link! <> "" then
+              if #validateURL() then
+                declare BBjButton btn!
+                btn! = #wnd!.addButton(#ID!+10001,#width!-57,30,80,30,"->")
+                btn!.setOpaque(0)
+                btn!.setNoEdge(1)
+                btn!.setForeColor(#SysGui!.makeColor(#SysGui!.GRAY))
+                btn!.setCallback(BBjAPI.ON_BUTTON_PUSH,#this!,"onRedirectPush")
+                btn!.setBackColor(#background!)
+                btn!.setFont(#SysGui!.makeFont("Roboto",12,1))
+              fi
+            fi
+        fi 
+         
+        
+        
+        
+        
+        if #buttons! <> null() then
+          if #buttons!.size() <> 0 then
+            declare int i!
+            declare auto NotificationButton button!
+            
+            i! = 0
+            currentwidth! = 3+#imagewidth!
+            currentrow! = 0
+           
+            while i! < #buttons!.size()
+               button! = #buttons!.get(i!)  
+               
+
+               
+                  
+               if currentrow! <> button!.getrow() then
+                    currentrow! = button!.getrow()
+                    currentwidth! = 3+#imagewidth! 
+               fi
+                                        
+               heightpos! = #height!-(#rows!*25)
+               heightpos! = heightpos! + (button!.getrow()*25)
+               btn!= #wnd!.addButton(button!.getID(),currentwidth!,heightpos!,button!.getwidth(),20,button!.gettext())
+               
+               currentwidth! = currentwidth! + button!.getwidth()+3
+               btn!.setCallback(BBjAPI.ON_BUTTON_PUSH,#this!,"onButtonPush")
+               i! = i! +1
+               
+            wend 
+          fi
+        fi
+        
+        
+        
+        if #image! <> null() then
+            #wnd!.addImageCtrl(#ID!+1000000,3,14,#image!.getWidth(),#image!.getHeight(),#image!)
+        fi
+        
+        rem creating a timer if a time to dismiss the notification was given 
+        #key! = #ID! + 100000
+        if #dismiss! > 0 then
+            BBjAPI().createTimer(#key!,#dismiss!,#this!,"dismissOnTimer")
+        fi
+    
+    
+        rem if animation mode is on, displaying the notification will slide it in from the right hand side
+        if animate! then
+          #wnd!.setVisible(1)
+          for i= screenbounds!.width to #x! step -1
+              #wnd!.setLocation(i,#y!)
+              wait #waittime!
+          next i
+        fi
+        #superclass!.reposition()
+        #wnd!.setVisible(1)
+    methodend 
+    
+    
+    REM /**
+    REM  * calls all necessairy methods to delete a notification from the system entirely
+    REM  * 
+    REM  */
+    method private void dismiss()
+        BBjAPI().removeTimer(#key!,ERR=*NEXT)
+        #superclass!.deleteID(#ID!)
+        #superclass!.fireNextFromBuffer()
+        #superclass!.reposition()
+    methodend
+    
+    
+    REM /**
+    REM  * event that gets called by the dismissbutton
+    REM  * 
+    REM  * @param ev! event thrown by the Button 
+    REM  */
+    method public void onClosePush(BBjButtonPushEvent ev!)
+        #dismiss()
+    methodend
+    
+    
+    REM /**
+    REM  * set the notification to a given x/y position if wished it will slowly drop down to its new respective ypos
+    REM  * 
+    REM  * @param x! new x position of the Notification
+    REM  * @param y! new y position of the Notification
+    REM  * @param animation! animationmode-toggle
+    REM  */
+    method public void setPosition(int x!,int y!,Boolean animation!)
+        if animation! then
+          for i= #y! to y!
+              if #wnd! <> null() then
+                #wnd!.setLocation(x!,i)
+              fi
+              wait #waittime!
+          next i
+        fi
+        #x! = x!
+        #y! = y!
+        #wnd!.setLocation(x!,y!)
+    methodend
+    
+    
+    REM /**
+    REM  * called by the redirect Button
+    REM  * 
+    REM  * @param ev! Event thrown by the Button
+    REM  */ 
+    method public void onRedirectPush(BBjEvent ev!)
+
+        BBjAPI().getThinClient().browse(#link!)
+    methodend
+    
+    
+    REM /**
+    REM  * called by the added Buttons
+    REM  * 
+    REM  * @param ev! Event thrown by the Button
+    REM  */
+    method public void onButtonPush(BBjEvent ev!)
+        declare int i!
+        declare String handle!
+        i! = 0
+        declare auto NotificationButton btn!
+        while i! < #buttons!.size()
+            btn! = #buttons!.get(i!)
+            if btn!.getID() = ev!.getControl().getID() then
+                handle! = btn!.gethandle()
+            fi
+            i! = i! +1
+        wend
+        #superclass!.firePush(handle!)
+    
+    methodend
+    
+    REM /**
+    REM  * called when the window was clicked and an eventhandle was given
+    REM  * 
+    REM  * @param ev! Event thrown by the Window when pushed
+    REM  */
+    method public void onWindowPush(BBjEvent ev!)
+        #superclass!.firePush(#EventHandle!)
+    methodend
+    
+    
+    REM /**
+    REM  * called if a dismisstimer was initialized for the notification
+    REM  * 
+    REM  * @param ev! Event thrown by the Timer on running out
+    REM  */
+    method public void dismissOnTimer(BBjTimerEvent ev!)
+        #dismiss()
+    methodend
+    
+    
+    REM /**
+    REM  * check if an URL is valid to launch for the redirect Button
+    REM  * 
+    REM  */
+    method public Boolean validateURL()
+     seterr validateUrlError 
+     url! = new URL(#link!)
+     connection! = CAST(HttpURLConnection,url!.openConnection())
+     connection!.setRequestMethod("GET") 
+     connection!.connect()
+     respCode! = connection!.getResponseCode()
+     
+     if respCode! <> 404 then
+     methodret 1
+     fi
+     
+     validateUrlError:
+     methodret 0
+    methodend 
+    
+    
+    
+    REM /**
+    REM  * dismiss the window itself Caution! will not delete any other traces of the notification
+    REM  * 
+    REM  * @param animate! animationmode-toggle
+    REM  */
+    method public void dismiss(Boolean animate!)
+        if !#wnd!.isDestroyed() then
+          screenbounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+          if animate! then
+            for i= #x! to screenbounds!.width
+                #wnd!.setLocation(i,#y!)
+                wait #waittime!
+            next i
+          fi
+        #wnd!.destroy()
+        fi
+    methodend 
+classend
