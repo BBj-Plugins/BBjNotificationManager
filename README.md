@@ -37,10 +37,16 @@ To pass buttons simply create a java.util.ArrayList and fill it with Notificatio
 To create an object call the constructor with new NotificationButton(String text, String eventhandle,int width) and put it in to the List <br/>
 
 If a link is passed the Notification will get a little button which will redirect the user to given links<br/>
+
+
+A Notification given any Possible Element will look i.e. like the following:<br/>
+![alt text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
+
+
+
 ### CAUTION: <br/>
 only Internet links are usable (no paths to drive etc.) and only links with scheme "http(s)://www.mysite.com" will work, if the link is not a valid internet address it will not display a redirection button!!! <br/>
 
 
 
-![alt text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
 
