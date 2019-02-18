@@ -11,11 +11,11 @@ Creates self-managed Notifications which can/will contain:<br/>
 - Button to redirect a user to a given link in the internet  (optional)
 - Backgroundcolor  (optional)
 - Icon to emphasize on the Notifications purpose (optional)
-- A Timer to automatically dismiss your Notification when it´s become irrelevant
-
+- A Timer to automatically dismiss your Notification when it´s become irrelevant (optional)
+- An animation to smoothly blend in the Notification (optional)
 
 ## Example<br/>
-A sample Notification notifying an incoming call could look like this
+A sample Notification for an incoming call could look like this
 ![alt-text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
 
 
