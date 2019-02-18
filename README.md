@@ -42,5 +42,5 @@ Only Internet links are usable (no paths to drive etc.) and only links with sche
 
 
 
-![alt text][https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png]
+![alt text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
 
