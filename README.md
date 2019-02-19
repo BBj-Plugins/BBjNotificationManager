@@ -29,5 +29,8 @@ A sample Notification for an incoming call could look like this
 For more information see the javadoc:
 
 
+https://bbj-plugins.github.io/BBjNotificationManager/javadoc/
+
+
 
 
