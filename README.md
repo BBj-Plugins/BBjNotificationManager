@@ -26,6 +26,8 @@ A sample Notification for an incoming call could look like this
 ![alt-text](https://raw.githubusercontent.com/BBj-Plugins/BBjNotificationManager/master/docs/screenshots/Bildschirmfoto%202019-02-18%20um%2012.36.52.png)
 
 
+For more information see the javadoc:
+
 
 
 
