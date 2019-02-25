@@ -280,7 +280,7 @@ class public NotificationManager extends BBjWidget
             for i = 0 to #notifications!.size()-1
                 not! = #notifications!.get(i)
                 if not!.getEventHandle() = eventhandle! then
-                    #deleteID(not!.getID(),#animate!)
+                    #deleteID(not!.getID())
                     break
                 fi
             next i
@@ -289,7 +289,7 @@ class public NotificationManager extends BBjWidget
             for i = 0 to #buffer!.size()-1
                 not! = #notifications!.get(i)
                 if not!.getEventHandle() = eventhandle! then
-                    #deleteID(not!.getID(),#animate!)
+                    #deleteID(not!.getID())
                     break
                 fi
             next i

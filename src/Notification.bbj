@@ -334,6 +334,7 @@ class public Notification
     REM  * @param ev! event thrown by the Button 
     REM  */
     method public void onClosePush(BBjButtonPushEvent ev!)
+        #superclass!.firePush("CLOSE:"+#EventHandle!)
         #dismiss()
     methodend
     
