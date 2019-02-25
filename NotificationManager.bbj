@@ -40,6 +40,23 @@ rem  * to create an object call the constructor with new NotificationButton(Stri
 rem  *  <br>
 rem  * if a link is passed, the Notification will get a little button which will redirect the user to given links <br>
 rem  * ---------------------------------------------------------------------------- <br>
+rem  * <br>
+rem  * <br>
+rem  * You can catch Events related to the Notifications by giving the Manager a Callback on Event id 17 and reading the eventdata passed <br>
+rem  * <br>
+rem  * The Events structures are as follows: <br>
+rem  * - (windowhandle) -> a Normal event associated with a button clicked, <br>
+rem  * i.e. if you gave the window a handle "Testhandle" it will return "Testhandle" <br> 
+rem  * if the Window or a Button with the handle "Testhandle" are clicked <br>
+rem  * 
+rem  * - ("TIMEOUT:windowhandle") an Event associated with a Timer that has run out <br>
+rem  *  it will return "TIMEOUT:" followed by the handle of the Notification that has run out <br>
+rem  *  i.e. if you gave the window a handle "Testhandle" it will return "TIMEOUT:Testhandle" if it was dismissed by running out <br>
+rem  * 
+rem  * - ("CLOSE:"windowhandle) an Event associated with a Window that has been closed by the user using the "x" button <br>
+rem  *   it will return "CLOSE:" followed by the handle of the Notification that has been closed <br>
+rem  *   i.e. if you gave the window a handle "Testhandle" it will return "CLOSE:Testhandle" if it was dismissed by pressing the "x" button <br>
+rem  * 
 rem  */
 
 
@@ -304,7 +321,7 @@ class public NotificationManager extends BBjWidget
     rem  * @param id! String to be thrown as an Event
     rem  */ 
     method public void firePush(String id!)
-        #super!.fireEvent(17,id!)
+        #super!.fireEvent(id!)
     methodend
     
 classend
