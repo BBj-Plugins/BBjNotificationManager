@@ -321,7 +321,7 @@ class public NotificationManager extends BBjWidget
     rem  * @param id! String to be thrown as an Event
     rem  */ 
     method public void firePush(String id!)
-        #super!.fireEvent(id!)
+        #super!.fireEvent(17,id!)
     methodend
     
 classend
