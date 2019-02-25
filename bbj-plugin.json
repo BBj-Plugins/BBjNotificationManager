@@ -1,7 +1,7 @@
 {
-  "name": "Notification Manager",
+  "name": "BBjNotificationManager",
   "description": "A Plugin to display autonomously managed Notifications",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "author": "Basis",
   "plugin_dependencies": [
     {
