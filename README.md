@@ -16,7 +16,6 @@ Creates self-managed Notifications which can/will contain:
 - Backgroundcolor  (optional)
 - Icon to emphasize on the Notifications purpose (optional)
 - A Timer to automatically dismiss your Notification when it´s become irrelevant (optional)
-- The Timer will fire an Event when run out
 - An animation to smoothly blend in the Notification (optional)
 
 ## Example

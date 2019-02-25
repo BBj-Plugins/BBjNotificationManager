@@ -1,7 +1,7 @@
 {
   "name": "Notification Manager",
   "description": "A Plugin to display autonomously managed Notifications",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "author": "Basis",
   "plugin_dependencies": [
     {
