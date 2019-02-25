@@ -8,30 +8,77 @@ use java.net.HttpURLConnection
 class public Notification 
     field private NotificationManager superclass!
     field private int key!
+    
+    rem /**
+    rem  * ID that the window will hold 
+    rem  */
     field public int ID!
+    rem /**
+    rem  *x coordinate of the Notification
+    rem  */
     field public int x!
+    rem /**
+    rem  * y coordinate of the Notification
+    rem  */
     field public int y! 
-    rem dismiss = variable to save dismiss time
+    rem /**
+    rem  * The time in seconds
+    rem  */
     field public int dismiss!
+    rem /**
+    rem  * Title of the Notification (not displayed)
+    rem  */
     field public String title!
+    rem /**
+    rem  * Height of the Notification
+    rem  */
     field public int height!
+    rem /**
+    rem  * Width of the Notification
+    rem  */
     field public int width!
+    rem /**
+    rem  * Text displayed on the lower part of the Notification 
+    rem  */
     field public String text!
+    rem /**
+    rem  * Title of the Notification displayed on the upper half
+    rem  */
     field public String textTitle!
+    rem /**
+    rem  * The Handle associated with the Window itself
+    rem  */
     field public String EventHandle!
+    rem /**
+    rem  * The Image displayed on the left Hand side of the Notification
+    rem  */
     field public BBjImage image!
+    rem /**
+    rem  * The Width of the image
+    rem  */
     field public int imagewidth!
+    rem /**
+    rem  * The background color of the Notification
+    rem  */
     field public BBjColor background!
     field private ArrayList buttons!
     field private int rows!
     field private String link!
     
-    rem animate = animation mode
+    rem /**
+    rem  * The Toggle for the animationmode
+    rem  */
     field public Boolean animate!
-    rem waittime = variable to save animation speed
+    rem /**
+    rem  * The timer that slows down the animation, the lower this will get the faster the Notification will be
+    rem  */
     field public static double waittime! = 0.002
 
     field protected BBjSysGui SysGui!
+    
+    rem /**
+    rem  * The Window itself
+    rem  */
     field public BBjTopLevelWindow wnd!
 
 
@@ -370,6 +417,7 @@ class public Notification
     REM /**
     REM  * check if an URL is valid to launch for the redirect Button
     REM  * 
+    REM  * @return returns if the URL that is given to the Window is valid or not
     REM  */
     method public Boolean validateURL()
      seterr validateUrlError 

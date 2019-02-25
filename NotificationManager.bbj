@@ -40,7 +40,7 @@ rem  * to create an object call the constructor with new NotificationButton(Stri
 rem  *  <br>
 rem  * if a link is passed, the Notification will get a little button which will redirect the user to given links <br>
 rem  * ---------------------------------------------------------------------------- <br>
-rem  */ 
+rem  */
 
 
 class public NotificationManager extends BBjWidget
@@ -137,7 +137,8 @@ class public NotificationManager extends BBjWidget
         fi
     methodend
  
-    rem /**gets called when the notifications change, it will fire a new notification from the buffer 
+    rem /**
+    rem  * gets called when the notifications change, it will fire a new notification from the buffer 
     rem  * to the displayed notifications if it reaches an amount of less than 5 
     rem  * 
     rem  */
@@ -152,7 +153,8 @@ class public NotificationManager extends BBjWidget
     methodend
  
     
-    rem /**add a new notification to the system with given properties
+    rem /**
+    rem  * add a new notification to the system with given properties
     rem  * 
     rem  * @param text! Text to be displayed in the body of the Notification
     rem  * @param dismiss! Time in seconds until the Notification will be dismissed automatically
@@ -199,6 +201,8 @@ class public NotificationManager extends BBjWidget
     rem  * 
     rem  * @param run! Position of the Notification wihtin the Array
     rem  * @param ownheight! height of the Notification
+    rem  * 
+    rem  * @return returns the next found free ypos
     rem  */ 
     method private int getNextYPOS(int run!,int ownheight!)
         declare int ypos!
@@ -229,6 +233,7 @@ class public NotificationManager extends BBjWidget
     rem /**
     rem  * find a unused display-id within the range of all active and inactive notifications that are in the notifications list and the buffer
     rem  * 
+    rem  * @return returns the next ID that is free calculated up from 1100 , recycling IDs that are not used anymore
     rem  */ 
     method private int getFreeID()
         declare int ID!
@@ -263,7 +268,8 @@ class public NotificationManager extends BBjWidget
     methodend
 
 
-    rem /**delete a specific notification by its eventhandle which has to be given to it when creating it
+    rem /**
+    rem  * delete a specific notification by its eventhandle which has to be given to it when creating it
     rem  * only safe method to delete a notification from outside!
     rem  * 
     rem  * @param eventhandle! Handle of the Notification to be deleted
@@ -274,7 +280,7 @@ class public NotificationManager extends BBjWidget
             for i = 0 to #notifications!.size()-1
                 not! = #notifications!.get(i)
                 if not!.getEventHandle() = eventhandle! then
-                    #deleteID(not!.getID())
+                    #deleteID(not!.getID(),#animate!)
                     break
                 fi
             next i
@@ -283,13 +289,14 @@ class public NotificationManager extends BBjWidget
             for i = 0 to #buffer!.size()-1
                 not! = #notifications!.get(i)
                 if not!.getEventHandle() = eventhandle! then
-                    #deleteID(not!.getID())
+                    #deleteID(not!.getID(),#animate!)
                     break
                 fi
             next i
         fi
         #reposition()
     methodend
+    
     
     rem /** 
     rem  * fireevent when a notification is clicked
