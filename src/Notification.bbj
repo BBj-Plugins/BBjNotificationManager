@@ -361,6 +361,8 @@ class public Notification
     REM  * @param ev! Event thrown by the Timer on running out
     REM  */
     method public void dismissOnTimer(BBjTimerEvent ev!)
+        handle! = "TIMEOUT:"+#EventHandle!
+        #superclass!.firePush(handle!)
         #dismiss()
     methodend
     

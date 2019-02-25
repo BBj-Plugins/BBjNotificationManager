@@ -1,13 +1,13 @@
 {
-	"name":"Notification Manager",
-	"description":"A Plugin to display autonomously managed Notifications",
-	"version":"1.0",
-	"author":"Basis",
-    "plugin_dependencies": [
-       {
-         "plugin_name": "BBjWidget",
-         "plugin_version": "master",
-         "project_url": "https://github.com/BBj-Plugins/BBjWidget"
-       }
-     ]
+  "name": "Notification Manager",
+  "description": "A Plugin to display autonomously managed Notifications",
+  "version": "1.0.1",
+  "author": "Basis",
+  "plugin_dependencies": [
+    {
+      "plugin_name": "BBjWidget",
+      "plugin_version": "master",
+      "project_url": "https://github.com/BBj-Plugins/BBjWidget"
+    }
+  ]
 }
