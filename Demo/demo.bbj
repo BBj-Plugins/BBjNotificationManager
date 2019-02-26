@@ -60,15 +60,6 @@ animate!.setCallback(BBjAPI.ON_CHECK_ON,"animate")
 animate!.setCallback(BBjAPI.ON_CHECK_OFF,"animateoff")
 wnd!.setCallback(BBjAPI.ON_CLOSE,"byebye")
 
-declare ArrayList buttons!
-buttons! = new ArrayList()
-button! = new NotificationButton("accept","accept")
-buttons!.add(button!)
-button! = new NotificationButton("decline","decline")
-buttons!.add(button!)
-button! = new NotificationButton("ignore","ignore")
-buttons!.add(button!)
-
 
 
 process_events
@@ -76,6 +67,14 @@ process_events
 btnPush:
 rem adding a notification
 rem parameters are : text,timeout,title ,eventhandle,color ,image ,buttons,link
+declare ArrayList buttons!
+buttons! = new ArrayList()
+button! = new NotificationButton("accept","accept"+eventhandle!.getText())
+buttons!.add(button!)
+button! = new NotificationButton("decline","decline"+eventhandle!.getText())
+buttons!.add(button!)
+button! = new NotificationButton("ignore","ignore"+eventhandle!.getText())
+buttons!.add(button!)
 mng!.addNotification(text!.getText(),num(time!.getText()),title!.getText(),eventhandle!.getText(),SysGui!.makeColor(color!.getText().toUpperCase()),bbjapi().getSysGui().getImageManager().loadImageFromFile(path!.getText()),buttons!,link!.getText()) 
 
 return
@@ -98,13 +97,18 @@ bye
 
 
 onclick:
-rem using the event pushed by the Notification class when clicked
+REM extract the Event that has been pushed
 ev!= BBjAPI().getLastEvent()
+
+REM extract the Object out of the Event 
 ob! = ev!.getObject()
+
+REM Use the Object out of the Event
 eventmessage!.setText("Button "+str(ob!)+" clicked!")
+
+
 
 rem using the event pushed by the Notification class to delete pushed handle
 rem you will need the handle associated with the window to delete given window!(its the handle associated with a click onto the window, in this demo showcased by the field eventhandle!)
-
 mng!.deleteNotification(str(ob!))
 return
