@@ -112,5 +112,7 @@ print eventmessage!.getText()
 
 rem using the event pushed by the Notification class to delete pushed handle
 rem you will need the handle associated with the window to delete given window!(its the handle associated with a click onto the window, in this demo showcased by the field eventhandle!)
-mng!.deleteNotification(str(ob!.getnotification()))
+if ob!.geteventtype() = "WINDOW_PUSH" then
+    mng!.deleteNotification(str(ob!.getnotification()))
+fi
 return
