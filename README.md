@@ -1,25 +1,25 @@
 # BBjNotification Manager
 
-Plugin that manages and displays noitifcations autonomously.
+Plugin that manages and displays noitifications autonomously.
 
 
-Displays Notification for a chosen amount of time or infinitely and closes them down on a run out timer or a dismissbutton.
+Displays notifications, optionally for a chosen amount of time or until dismissed.
 
 
 
 ## Contents
 Creates self-managed Notifications which can/will contain:
-- A Title and Text 
-- Handle when the window is clicked to react as a user clicks a Notification (optional)
+- A title and text 
+- Handle when the window is clicked to react as a user clicks a notification (optional)
 - Buttons to give more options to react as a User  (optional)
 - Button to redirect a user to a given link in the internet  (optional)
-- Backgroundcolor  (optional)
-- Icon to emphasize on the Notifications purpose (optional)
-- A Timer to automatically dismiss your Notification when it´s become irrelevant (optional)
-- An animation to smoothly blend in the Notification (optional)
+- Background color  (optional)
+- Icon to emphasize on the notifications purpose (optional)
+- A Timer to automatically dismiss your notification when it´s become irrelevant (optional)
+- An animation to smoothly blend in the notification (optional)
 
 ## Example
-A sample Notification for an incoming call could look like this
+A sample notification for an incoming call could look like this
 
 
 
