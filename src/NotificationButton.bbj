@@ -6,10 +6,25 @@ class public NotificationButton
     field public int ID!
     
     method public NotificationButton(String text!,String handle!)
+      REM /**
+      REM  * Text displayed on the Button
+      REM  */
         #text! = text!
+      REM /**
+      REM  * Handle that will be thrown when this button was clicked
+      REM  */
         #handle! = handle!
+      REM /**
+      REM  * Width that the button will have (will be calculated to fit the Size of the Font)
+      REM  */
         #width! = 80
+      REM /**
+      REM  * An internal variable that will be calculated to hold the row of the button in case of more buttons than width contained
+      REM  */
         #row! = 0 
+      REM /**
+      REM  * An internal value that will hold the ID of the button and will be calculated later on
+      REM  */
         #ID! = 0 
     methodend
     

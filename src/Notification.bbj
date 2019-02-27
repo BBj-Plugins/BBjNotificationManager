@@ -1,6 +1,7 @@
 use ::BBjNotificationManager/NotificationManager.bbj::NotificationManager
 use java.util.ArrayList
 use ::BBjNotificationManager/src/NotificationButton.bbj::NotificationButton
+use ::BBjNotificationManager/src/NotificationEvent.bbj::NotificationEvent
 use java.net.InetAddress
 use java.net.URL
 use java.net.HttpURLConnection
@@ -335,7 +336,11 @@ class public Notification
     REM  * @param ev! event thrown by the Button 
     REM  */
     method public void onClosePush(BBjButtonPushEvent ev!)
-        #superclass!.firePush("CLOSE:"+ #EventHandle!)
+        declare NotificationEvent event! 
+        event! = new NotificationEvent(#Eventhandle!,#EventHandle!,"CLOSE")
+        
+        #superclass!.firePush(event!)
+        
         #dismiss()
     methodend
     
@@ -390,7 +395,11 @@ class public Notification
             fi
             i! = i! +1
         wend
-        #superclass!.firePush(handle!)
+        
+        declare NotificationEvent event! 
+        event! = new NotificationEvent(#EventHandle!,handle!,"BTN_PUSH")
+        
+        #superclass!.firePush(event!)
     
     methodend
     
@@ -400,7 +409,10 @@ class public Notification
     REM  * @param ev! Event thrown by the Window when pushed
     REM  */
     method public void onWindowPush(BBjEvent ev!)
-        #superclass!.firePush(#EventHandle!)
+        declare NotificationEvent event! 
+        event! = new NotificationEvent(#EventHandle!,#EventHandle!,"WINDOW_PUSH")
+        
+        #superclass!.firePush(event!)
     methodend
     
     
@@ -410,8 +422,10 @@ class public Notification
     REM  * @param ev! Event thrown by the Timer on running out
     REM  */
     method public void dismissOnTimer(BBjTimerEvent ev!)
-        handle! = "TIMEOUT:"+#EventHandle!
-        #superclass!.firePush(handle!)
+        declare NotificationEvent event! 
+        event! = new NotificationEvent(#EventHandle!,#EventHandle!,"TIMEOUT")
+        
+        #superclass!.firePush(event!)
         #dismiss()
     methodend
     

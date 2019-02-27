@@ -1,0 +1,24 @@
+
+
+class public NotificationEvent 
+
+    field public String notification!
+    field public String event!
+    field public String eventtype!
+    
+    method public NotificationEvent(String not!,String event!,String eventtype!)
+      REM /**
+      REM  * This contains the event that has been thrown by the Notification
+      REM  */
+        #event!= event!
+      REM /**
+      REM  * This contains the exact type/cause of the event thrown
+      REM  */
+        #eventtype! = eventtype!
+      REM /**
+      REM  * This contains the exact handle that has been given to the source-Notification of the event
+      REM  */
+        #notification! = not!
+    methodend
+classend
+

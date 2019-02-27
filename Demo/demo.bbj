@@ -1,6 +1,7 @@
 use ::BBjNotificationManager/NotificationManager.bbj::NotificationManager
 use java.util.ArrayList 
 use ::BBjNotificationManager/src/NotificationButton.bbj::NotificationButton
+use ::BBjNotificationManager/src/NotificationEvent.bbj::NotificationEvent
 
 
 declare NotificationManager mng!
@@ -69,11 +70,11 @@ rem adding a notification
 rem parameters are : text,timeout,title ,eventhandle,color ,image ,buttons,link
 declare ArrayList buttons!
 buttons! = new ArrayList()
-button! = new NotificationButton("accept","accept"+eventhandle!.getText())
+button! = new NotificationButton("accept","accept")
 buttons!.add(button!)
-button! = new NotificationButton("decline","decline"+eventhandle!.getText())
+button! = new NotificationButton("decline","decline")
 buttons!.add(button!)
-button! = new NotificationButton("ignore","ignore"+eventhandle!.getText())
+button! = new NotificationButton("ignore","ignore")
 buttons!.add(button!)
 mng!.addNotification(text!.getText(),num(time!.getText()),title!.getText(),eventhandle!.getText(),SysGui!.makeColor(color!.getText().toUpperCase()),bbjapi().getSysGui().getImageManager().loadImageFromFile(path!.getText()),buttons!,link!.getText()) 
 
@@ -101,14 +102,15 @@ REM extract the Event that has been pushed
 ev!= BBjAPI().getLastEvent()
 
 REM extract the Object out of the Event 
+declare auto NotificationEvent ob! 
 ob! = ev!.getObject()
 
 REM Use the Object out of the Event
-eventmessage!.setText("Button "+str(ob!)+" clicked!")
-
+eventmessage!.setText("Event "+ ob!.getevent() +" of the Type "+ ob!.geteventtype() +" caught on Notification " +ob!.getnotification())
+print eventmessage!.getText()
 
 
 rem using the event pushed by the Notification class to delete pushed handle
 rem you will need the handle associated with the window to delete given window!(its the handle associated with a click onto the window, in this demo showcased by the field eventhandle!)
-mng!.deleteNotification(str(ob!))
+mng!.deleteNotification(str(ob!.getnotification()))
 return

@@ -54,7 +54,7 @@ BEGIN
         NAME "Text4"
     END
 
-    STATICTEXT 110, "", 54, 392, 206, 25
+    STATICTEXT 110, "", 54, 362, 206, 55
     BEGIN
         NAME "EventDisplay"
     END
