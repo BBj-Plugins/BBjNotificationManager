@@ -337,7 +337,7 @@ class public Notification
     REM  */
     method public void onClosePush(BBjButtonPushEvent ev!)
         declare NotificationEvent event! 
-        event! = new NotificationEvent(#Eventhandle!,#EventHandle!,"CLOSE")
+        event! = new NotificationEvent(#EventHandle!,#EventHandle!,"CLOSE")
         
         #superclass!.firePush(event!)
         

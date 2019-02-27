@@ -106,7 +106,7 @@ declare auto NotificationEvent ob!
 ob! = ev!.getObject()
 
 REM Use the Object out of the Event
-eventmessage!.setText("Event "+ ob!.getevent() +" of the Type "+ ob!.geteventtype() +" caught on Notification " +ob!.getnotification())
+eventmessage!.setText("Event "+ ob!.getevent() +" of the Type "+ ob!.geteventtype() +" caught on Notification " + ob!.getnotification())
 print eventmessage!.getText()
 
 
