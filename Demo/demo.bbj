@@ -5,7 +5,7 @@ use ::BBjNotificationManager/src/NotificationEvent.bbj::NotificationEvent
 
 
 declare NotificationManager mng!
-mng! = new NotificationManager() 
+mng! = new NotificationManager()
 mng!.setCallback(17,"onclick")
 declare BBjSysGui SysGui!
 
@@ -54,14 +54,16 @@ color! = wnd!.getControl(114)
 declare auto BBjInputE link!
 link! = wnd!.getControl(116) 
 
+declare auto BBjCheckBox isOriTopRight!
+isOriTopRight! = wnd!.getControl("cbTopRight")
+
 declare Boolean anim!
 anim! = 0
 btn!.setCallback(BBjAPI.ON_BUTTON_PUSH,"btnPush")
 animate!.setCallback(BBjAPI.ON_CHECK_ON,"animate")
 animate!.setCallback(BBjAPI.ON_CHECK_OFF,"animateoff")
+isOriTopRight!.setCallback(BBjAPI.ON_CHECK_ON,"orientationTopRight")
 wnd!.setCallback(BBjAPI.ON_CLOSE,"byebye")
-
-
 
 process_events
 
@@ -81,20 +83,23 @@ mng!.addNotification(text!.getText(),num(time!.getText()),title!.getText(),event
 return
 
 animate: 
-rem changing animation settings
-mng!.setAnimate(1)
-anim! = 1
+  rem changing animation settings
+  mng!.setAnimate(1)
+  anim! = 1
 return
 
 animateoff:
-mng!.setAnimate(0)
-anim! = 0
+  mng!.setAnimate(0)
+  anim! = 0
 return
 
-
+orientationTopRight: 
+  mng!.setInitialOrientationTopRight()
+  isOriTopRight!.setEnabled(0)
+return
 
 byebye:
-bye
+  bye
 
 
 onclick:
