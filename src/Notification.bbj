@@ -254,9 +254,6 @@ class public Notification
               fi
             fi
         fi 
-         
-        
-        
         
         
         if #buttons! <> null() then
@@ -270,9 +267,6 @@ class public Notification
            
             while i! < #buttons!.size()
                button! = #buttons!.get(i!)  
-               
-
-               
                   
                if currentrow! <> button!.getrow() then
                     currentrow! = button!.getrow()

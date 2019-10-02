@@ -1,3 +1,7 @@
+REM /**
+REM  * 2019-09-29 ; RVDHofDAGOCAR ; Requirement to display the notificaion in the top right corner in order to avoid a display conflict with an already existing solutions showing notifications at the lower right edge.  
+REM  */
+
 use ::BBjNotificationManager/src/Notification.bbj::Notification
 use java.util.ArrayList
 use ::BBjWidget/BBjWidget.bbj::BBjWidget
@@ -72,6 +76,9 @@ class public NotificationManager extends BBjWidget
     rem animation mode
     field private Boolean animate!
 
+    rem default orientation where notifications appear : '' | 'TOPRIGHT'
+    field private BBjString orientation! = ""
+
     rem /**
     rem  * Constructor for the Manager
     rem */
@@ -90,6 +97,16 @@ class public NotificationManager extends BBjWidget
         #animate! = false
     methodend
 
+
+    REM /**
+    REM  * Sets the starting appearance of the notification to the top right corner of the display.
+    REM  */
+    method public void setInitialOrientationTopRight()
+        if #orientation!=""
+            #orientation!="TOPRIGHT"
+        fi
+    methodend
+    
     
     rem /**
     rem  * reposition the entirety of displayed notifications
@@ -100,7 +117,8 @@ class public NotificationManager extends BBjWidget
        rem cycling through the notifications object to reposition all notifications to their respective new position
         for i=0 to #notifications!.size()-1
              not! = #notifications!.get(i)
-             not!.setPosition(not!.getx(),#getNextYPOS(i-1,not!.getheight()),#animate!)
+             newYPos=#getNextYPOS(i-1,not!.getheight())
+             not!.setPosition(not!.getx(),newYPos,#animate!)
          next i
        fi
     methodend
@@ -128,7 +146,7 @@ class public NotificationManager extends BBjWidget
           next i
         fi
     methodend
-    
+
     
     rem /** 
     rem  * delete the ID of an active notification
@@ -182,6 +200,7 @@ class public NotificationManager extends BBjWidget
     method public void addNotification(String text!,int dismiss!,String title!, String EventHandle!,BBjColor color!,BBjImage image!,ArrayList buttons!,String redirect!)
         declare int height!
         declare int width!
+        declare int y!
         
         ID! = #getFreeID()
         screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
@@ -196,7 +215,8 @@ class public NotificationManager extends BBjWidget
      
         declare Notification not!
         
-        not! = new Notification(ID!,height!,width!,text!,dismiss!,x!,0,"Notification",#this!,title!,#animate!,EventHandle!,color!,image!,buttons!,redirect!)
+        y!=0
+        not! = new Notification(ID!,height!,width!,text!,dismiss!,x!,y!,"Notification",#this!,title!,#animate!,EventHandle!,color!,image!,buttons!,redirect!)
         rem only displaying the given amount of notifications, if the notification would exceed the given amount
         rem it will be put into a buffer and displayed if enough slots are open
 
@@ -222,24 +242,23 @@ class public NotificationManager extends BBjWidget
         declare int ypos!
         declare int height!
         declare auto Notification not!
-         screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
         height! = ownheight!+20
         rem cycling through the notifications and adding all the heights including a bottombuffer together to find a ypos thats open at the top 
         
         if run! < #notifications!.size() AND run! >= 0 then
           if #notifications!.size() > 0 then
-             print "run"
              for i = 0 to run!
                 not! = #notifications!.get(i)
                 height! = height! + not!.getheight()+10
              next i
           fi
-
-          
         endif
-        
-        
-        ypos! = screenBounds!.height - (height!+#bottombuffer!)
+        if #orientation!="TOPRIGHT"
+            ypos! = screenBounds!.y + height! + #bottombuffer! - ownheight!
+        else
+            ypos! = screenBounds!.height - (height!+#bottombuffer!)
+        fi
         methodret ypos!
     methodend
     

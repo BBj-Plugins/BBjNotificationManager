@@ -1,4 +1,4 @@
-//#charset: UTF-8
+//#charset: windows-1252
 
 VERSION "4.0"
 
@@ -106,6 +106,11 @@ BEGIN
         NAME "InputE116"
         PADCHARACTER 32
         INSERTMODE
+    END
+
+    CHECKBOX 100, "top right orientation", 285, 341, 123, 25
+    BEGIN
+        NAME "cbTopRight"
     END
 
 END
