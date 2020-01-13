@@ -164,7 +164,7 @@ class public Notification
     method public void display(Boolean animate!)
         screenbounds! = #SysGui!.getSystemMetrics().getScreenBounds()
         declare BBjTopLevelWindow wnd!
-        wnd! = #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01000010$)
+        wnd! = #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01020010$)
         
         if #buttons! <> null() then
           if #buttons!.size() <> 0 then
@@ -202,10 +202,10 @@ class public Notification
         
         rem creating a window and animating it if wished
         if animate! then
-          #wnd!= #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01000010$)
+          #wnd!= #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01020010$)
           #wnd!.setBackColor(#background!)
         else
-          #wnd! = #SysGui!.addWindow(#ID!,#x!,#y!,#width!,#height!,#title!,$01000010$)
+          #wnd! = #SysGui!.addWindow(#ID!,#x!,#y!,#width!,#height!,#title!,$01020010$)
           #wnd!.setBackColor(#background!)
         endif
         
