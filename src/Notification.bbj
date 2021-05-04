@@ -162,7 +162,7 @@ class public Notification
     REM  * @param animate! should the display be animated or not?
     REM  */
     method public void display(Boolean animate!)
-        screenbounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        screenbounds! = NotificationManager.getScreenBounds()
         declare BBjTopLevelWindow wnd!
         wnd! = #SysGui!.addWindow(#ID!,screenbounds!.width,#y!,#width!,#height!,#title!,$01020010$)
         
@@ -454,7 +454,7 @@ class public Notification
     REM  */
     method public void dismiss(Boolean animate!)
         if !#wnd!.isDestroyed() then
-          screenbounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+          screenbounds! = NotificationManager.getScreenBounds()
           if animate! then
             for i= #x! to screenbounds!.width
                 #wnd!.setLocation(i,#y!)

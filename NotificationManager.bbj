@@ -203,7 +203,7 @@ class public NotificationManager extends BBjWidget
         declare int y!
         
         ID! = #getFreeID()
-        screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        screenBounds! = NotificationManager.getScreenBounds()
         rem height of the notifications is correspodning to 10% of the screen size
         height! = int(screenBounds!.height*0.1)
         
@@ -242,7 +242,7 @@ class public NotificationManager extends BBjWidget
         declare int ypos!
         declare int height!
         declare auto Notification not!
-        screenBounds! = #SysGui!.getSystemMetrics().getScreenBounds()
+        screenBounds! = NotificationManager.getScreenBounds()
         height! = ownheight!+20
         rem cycling through the notifications and adding all the heights including a bottombuffer together to find a ypos thats open at the top 
         
@@ -340,4 +340,24 @@ class public NotificationManager extends BBjWidget
         #super!.fireEvent(17,id!)
     methodend
     
+    
+    method public static java.awt.Rectangle getScreenBounds()
+        screenBounds! = BBjAPI().getSysGui().getSystemMetrics().getScreenBounds()
+        if REV < "REV 21.00" AND BBjAPI().isInMDI() AND info(3,6)<"5"  then
+            if str(BBjAPI().getConfig().getCurrentCommandLineObject().getChildFrameMode()) = "SDI" then
+				graphicsEnvironment! = java.awt.GraphicsEnvironment@.getLocalGraphicsEnvironment()
+				Screens!             = java.util.Arrays@.asList(graphicsEnvironment!.getScreenDevices())
+				if Screens!<>Null() and Screens!.size()>0 then
+					Display!               = cast(java.awt.GraphicsDevice@, Screens!.get(Screen))
+					DisplayMode!           = cast(java.awt.DisplayMode@   , Display!.getDisplayMode())
+					GraphicsConfiguration! = Display!.getDefaultConfiguration()
+					screenBounds! = BBjAPI().cloneAsServerObject(GraphicsConfiguration!.getBounds())
+					
+				fi
+            fi
+        fi
+        
+        
+        methodret screenBounds! 
+    methodend 
 classend
