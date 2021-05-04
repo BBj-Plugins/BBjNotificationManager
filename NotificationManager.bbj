@@ -344,7 +344,7 @@ class public NotificationManager extends BBjWidget
     method public static java.awt.Rectangle getScreenBounds()
         screenBounds! = BBjAPI().getSysGui().getSystemMetrics().getScreenBounds()
         if REV < "REV 21.00" AND BBjAPI().isInMDI() AND info(3,6)<"5"  then
-            if str(BBjAPI().getConfig().getCurrentCommandLineObject().getChildFrameMode()) = "SDI" then
+            if str(BBjAPI().getConfig().getCurrentCommandLineObject().getChildFrameMode()) = "SDI" ORstr(BBjAPI().getConfig().getCurrentCommandLineObject().getChildFrameMode()) = "DETACHED"  then
 				graphicsEnvironment! = java.awt.GraphicsEnvironment@.getLocalGraphicsEnvironment()
 				Screens!             = java.util.Arrays@.asList(graphicsEnvironment!.getScreenDevices())
 				if Screens!<>Null() and Screens!.size()>0 then
